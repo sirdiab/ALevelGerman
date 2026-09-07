@@ -3,10 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Master Goethe Vocabulary – 1,554 Words Anki Deck with Native Audio</title>
+  <title>Master Goethe A1 Vocabulary – 1,554 Words Anki Deck with Native Audio</title>
+
+  <!-- Google Fonts: Cross-Platform Identical Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- PapaParse for parsing words.csv in the interactive tester/directory -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
   <style>
     :root {
       --bg-dark: #0b1017;
@@ -21,7 +28,7 @@
     body {
       background-color: var(--bg-dark);
       color: var(--parchment-cream);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       overflow-x: hidden;
       -webkit-tap-highlight-color: transparent;
     }
@@ -80,7 +87,7 @@
     }
     .city-label {
       fill: #dfd6c4;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 13px;
       font-weight: 600;
       letter-spacing: 0.5px;
@@ -117,11 +124,20 @@
       pointer-events: none;
     }
 
-    /* 3D Playing Card Styles */
+    /* 3D Playing Card Styles with iOS Safari Fixes */
     .perspective { perspective: 1000px; }
-    .transform-style-3d { transform-style: preserve-3d; }
-    .backface-hidden { backface-visibility: hidden; }
-    .rotate-y-180 { transform: rotateY(180deg); }
+    .transform-style-3d { 
+      transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
+    }
+    .backface-hidden { 
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .rotate-y-180 { 
+      transform: rotateY(180deg);
+      -webkit-transform: rotateY(180deg);
+    }
 
     /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -244,12 +260,12 @@
     <div class="max-w-5xl mx-auto px-4 py-3 sm:py-4 flex justify-between items-center">
       <div class="flex items-center space-x-2">
         <span class="text-lg text-[#dfd6c4]">♦</span>
-        <h1 class="text-xs sm:text-sm font-bold tracking-widest uppercase text-[#dfd6c4]">Goethe Mastery Deck</h1>
+        <h1 class="text-xs sm:text-sm font-bold tracking-widest uppercase text-[#dfd6c4]">Goethe A1 Mastery Deck</h1>
       </div>
       <div>
         <a href="#downloadSection" 
            class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider bg-[#dfd6c4] hover:bg-[#ebd5b3] text-[#0b1017] px-4 py-2 rounded-full transition shadow-md hover:scale-105 active:scale-95">
-          <span>Download</span>
+          <span>Get Deck</span>
           <span>↓</span>
         </a>
       </div>
@@ -264,10 +280,10 @@
         <span>⚡</span> 100% Complete • 1,554 Official Exam Words
       </div>
       <h2 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#dfd6c4] max-w-2xl mx-auto leading-tight">
-        Master Goethe Wordlist Effortlessly.
+        Master the Goethe A1 Wordlist Effortlessly.
       </h2>
       <p class="text-[#748398] text-xs sm:text-base max-w-xl mx-auto leading-relaxed">
-        Stop spending 50+ hours creating flashcards from scratch. Master every single official word with <strong class="text-[#dfd6c4]">native speaker audio</strong>, exact example sentences, and spaced repetition built for Anki.
+        Stop spending 50+ hours creating flashcards from scratch. Lock in every official word with <strong class="text-[#dfd6c4]">authentic native speaker audio</strong>, exact example sentences, and spaced repetition built for Anki.
       </p>
     </div>
 
@@ -276,7 +292,7 @@
       <div class="w-full max-w-xs sm:max-w-sm">
         <!-- Control Banner / Counter -->
         <div class="flex justify-between items-center text-[10px] uppercase tracking-wider text-[#748398] mb-2.5 px-1">
-          <span id="cardCounter">Interactive Test Drive</span>
+          <span id="cardCounter">Interactive Preview</span>
           <span class="hidden sm:inline">Tap card to flip • ← → to browse</span>
         </div>
 
@@ -287,8 +303,8 @@
             <!-- Front Face -->
             <div class="absolute inset-0 backface-hidden p-6 sm:p-7 flex flex-col justify-between items-center rounded-[24px] sm:rounded-[28px] bg-[#212c3d]/90 backdrop-blur-md border border-[#dfd6c4]/25 shadow-inner">
               <div class="absolute top-4 left-4 sm:top-5 sm:left-5 flex flex-col items-center font-black text-[#dfd6c4] leading-none">
-                <span class="text-lg sm:text-xl"></span>
-                <span class="text-sm sm:text-base text-[#dfd6c4]">♦</span>
+                <span class="text-sm sm:text-base font-bold">A1</span>
+                <span class="text-xs sm:text-sm text-[#dfd6c4]">♦</span>
               </div>
 
               <div class="text-[9px] sm:text-[10px] tracking-[2.5px] uppercase font-bold text-[#748398] pt-1">
@@ -302,19 +318,19 @@
               </div>
 
               <div class="text-[9px] sm:text-[10px] tracking-[2px] uppercase text-[#748398] pb-1">
-                Click or Space to Reveal Meaning
+                Click or Tap to Flip
               </div>
               <div class="absolute bottom-4 right-4 sm:bottom-5 sm:right-5 flex flex-col items-center font-black text-[#dfd6c4] leading-none rotate-180">
-                <span class="text-lg sm:text-xl"></span>
-                <span class="text-sm sm:text-base text-[#dfd6c4]">♦</span>
+                <span class="text-sm sm:text-base font-bold">A1</span>
+                <span class="text-xs sm:text-sm text-[#dfd6c4]">♦</span>
               </div>
             </div>
 
             <!-- Back Face -->
             <div class="absolute inset-0 backface-hidden rotate-y-180 p-6 sm:p-7 flex flex-col justify-between items-center rounded-[24px] sm:rounded-[28px] bg-[#1a2331]/95 backdrop-blur-md border border-[#dfd6c4]/30 shadow-inner">
               <div class="absolute top-4 left-4 sm:top-5 sm:left-5 flex flex-col items-center font-black text-[#dfd6c4] leading-none">
-                <span class="text-lg sm:text-xl"></span>
-                <span class="text-sm sm:text-base text-[#dfd6c4]">♦</span>
+                <span class="text-sm sm:text-base font-bold">A1</span>
+                <span class="text-xs sm:text-sm text-[#dfd6c4]">♦</span>
               </div>
 
               <div class="text-[9px] sm:text-[10px] tracking-[2.5px] uppercase font-bold text-[#748398] pt-1">
@@ -333,8 +349,8 @@
                 Official Goethe Standard
               </div>
               <div class="absolute bottom-4 right-4 sm:bottom-5 sm:right-5 flex flex-col items-center font-black text-[#dfd6c4] leading-none rotate-180">
-                <span class="text-lg sm:text-xl"></span>
-                <span class="text-sm sm:text-base text-[#dfd6c4]">♦</span>
+                <span class="text-sm sm:text-base font-bold">A1</span>
+                <span class="text-xs sm:text-sm text-[#dfd6c4]">♦</span>
               </div>
             </div>
 
@@ -372,7 +388,7 @@
           </div>
           <div>
             <h4 class="text-xs font-bold text-[#dfd6c4]">All 1,554 Official Words</h4>
-            <p class="text-[11px] text-[#748398] mt-0.5 leading-snug">Directly transcribed from the official Goethe-Zertifikat Wortliste. Zero fluff, zero missing vocabulary.</p>
+            <p class="text-[11px] text-[#748398] mt-0.5 leading-snug">Directly transcribed from the official Goethe-Zertifikat A1 Wortliste. Zero fluff, zero missing vocabulary.</p>
           </div>
         </div>
 
@@ -383,7 +399,7 @@
           </div>
           <div>
             <h4 class="text-xs font-bold text-[#dfd6c4]">Authentic Native Audio</h4>
-            <p class="text-[11px] text-[#748398] mt-0.5 leading-snug">No robotic text-to-speech. Hear true accent, rhythm, and cadence so you ace the listening (<em>Hören</em>) module.</p>
+            <p class="text-[11px] text-[#748398] mt-0.5 leading-snug">No robotic text-to-speech. Hear true native accent and cadence so you ace the listening (<em>Hören</em>) exam.</p>
           </div>
         </div>
 
@@ -394,7 +410,7 @@
           </div>
           <div>
             <h4 class="text-xs font-bold text-[#dfd6c4]">Gothic Card Architecture</h4>
-            <p class="text-[11px] text-[#748398] mt-0.5 leading-snug">Eye-friendly dark interface featuring essential grammar cues, gender-coded articles, and real-life context.</p>
+            <p class="text-[11px] text-[#748398] mt-0.5 leading-snug">Clean typography with distinct visual hierarchy, article indicators, and real-life conversational context.</p>
           </div>
         </div>
       </div>
@@ -444,7 +460,7 @@
 
   <!-- ================= FOOTER ================= -->
   <footer class="relative z-10 border-t border-[#dfd6c4]/10 bg-[#0b1017]/90 py-6 text-center text-[10px] tracking-widest uppercase text-[#748398]">
-    Goethe-Zertifikat Vocabulary • Complete 1,554-Card Native Audio System
+    Goethe-Zertifikat A1 Vocabulary • Complete 1,554-Card Native Audio System
   </footer>
 
   <!-- ================= SCRIPT LOGIC ================= -->
@@ -492,6 +508,7 @@
       download: true,
       header: true,
       skipEmptyLines: true,
+      encoding: 'UTF-8',
       complete: function(results) {
         words = results.data.filter(r => r.German_Headword && r.English_Meaning);
         if (words.length > 0) {
@@ -499,10 +516,12 @@
           renderTable(words);
         } else {
           cardFrontHeadword.textContent = "Please place words.csv in the same folder";
+          tableBody.innerHTML = `<tr><td colspan="3" class="py-6 text-center text-[#748398]">words.csv found but no valid rows detected.</td></tr>`;
         }
       },
       error: function(err) {
         cardFrontHeadword.textContent = "Error reading words.csv";
+        tableBody.innerHTML = `<tr><td colspan="3" class="py-6 text-center text-red-400">Could not load words.csv. If opening locally, please run through a local web server (e.g. Live Server).</td></tr>`;
         console.error(err);
       }
     });
@@ -517,11 +536,11 @@
       }
 
       setTimeout(() => {
-        cardFrontHeadword.textContent = cur.German_Headword;
+        cardFrontHeadword.textContent = cur.German_Headword || '';
         cardFrontSentence.innerHTML = cur.Example_Sentence_DE || '';
         
-        cardBackHeadword.textContent = cur.German_Headword;
-        cardBackMeaning.textContent = cur.English_Meaning;
+        cardBackHeadword.textContent = cur.German_Headword || '';
+        cardBackMeaning.textContent = cur.English_Meaning || '';
         cardBackSentence.innerHTML = cur.Example_Sentence_DE || '';
         cardBackTranslation.textContent = cur.Example_Sentence_EN || '';
         
@@ -560,12 +579,16 @@
     function renderTable(dataList) {
       const rows = dataList.slice(0, 100).map(item => `
         <tr class="hover:bg-[#212c3d]/60 transition">
-          <td class="py-3 px-4 font-semibold text-[#dfd6c4]">${item.German_Headword}</td>
-          <td class="py-3 px-4 text-[#cbb998] font-medium">${item.English_Meaning}</td>
+          <td class="py-3 px-4 font-semibold text-[#dfd6c4]">${escapeHtml(item.German_Headword || '')}</td>
+          <td class="py-3 px-4 text-[#cbb998] font-medium">${escapeHtml(item.English_Meaning || '')}</td>
           <td class="py-3 px-4 text-[#748398] hidden md:table-cell">${item.Example_Sentence_DE || ''}</td>
         </tr>
       `).join('');
       tableBody.innerHTML = rows || `<tr><td colspan="3" class="py-6 text-center text-[#748398]">No matching cards found.</td></tr>`;
+    }
+
+    function escapeHtml(string) {
+      return String(string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
     document.getElementById('cardContainer').addEventListener('click', toggleFlip);
@@ -581,7 +604,7 @@
     });
 
     searchInput.addEventListener('input', (e) => {
-      const q = e.target.value.toLowerCase();
+      const q = e.target.value.toLowerCase().trim();
       const filtered = words.filter(w => 
         (w.German_Headword && w.German_Headword.toLowerCase().includes(q)) || 
         (w.English_Meaning && w.English_Meaning.toLowerCase().includes(q))
