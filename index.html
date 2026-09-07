@@ -16,7 +16,6 @@
       --parchment-cream: #dfd6c4;
       --slate-subtext: #748398;
       --gold-accent: #cbb998;
-      --city-glow: rgba(235, 213, 179, 0.85);
     }
 
     body {
@@ -35,34 +34,70 @@
       overflow: hidden;
     }
 
-    /* Ambient Space & Radial Glow */
     .space-layer {
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at 50% 30%, #16202e 0%, #0d131b 60%, #06090d 100%);
+      background: radial-gradient(circle at 50% 32%, #182333 0%, #0d131b 60%, #06090d 100%);
     }
 
-    /* Night Satellite City Lights */
-    .satellite-lights {
+    /* Subtle Cartographic Coordinate Grid */
+    .cartographic-grid {
       position: absolute;
       inset: 0;
-      transition: opacity 0.4s ease-out, transform 0.2s cubic-bezier(0.1, 0, 0.2, 1);
-      transform-origin: 50% 40%;
+      opacity: 0.08;
+      background-image: 
+        linear-gradient(to right, #dfd6c4 1px, transparent 1px),
+        linear-gradient(to bottom, #dfd6c4 1px, transparent 1px);
+      background-size: 90px 90px;
     }
 
-    .city-beacon {
+    /* Geographically Accurate Germany Map SVG */
+    .germany-topography {
       position: absolute;
-      width: 4px;
-      height: 4px;
-      background: #fff5e0;
-      border-radius: 50%;
-      box-shadow: 0 0 10px 2px var(--gold-accent), 0 0 20px 6px rgba(223, 214, 196, 0.3);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      width: min(94vw, 860px);
+      height: auto;
+      transition: transform 0.2s cubic-bezier(0.1, 0, 0.2, 1), opacity 0.3s ease-out;
+      transform-origin: center center;
     }
 
-    /* GPS Sonar Pulse Marker from Image 1 */
+    /* City Node Styling */
+    .city-dot {
+      fill: #dfd6c4;
+      filter: drop-shadow(0 0 3px rgba(223, 214, 196, 0.8));
+    }
+    .city-label {
+      fill: #dfd6c4;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      user-select: none;
+    }
+    .country-label {
+      fill: #748398;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      opacity: 0.55;
+      user-select: none;
+    }
+    .sea-label {
+      fill: #748398;
+      font-size: 12px;
+      font-style: italic;
+      letter-spacing: 2px;
+      opacity: 0.45;
+      user-select: none;
+    }
+
+    /* GPS Sonar Pulse Marker from Image */
     .gps-marker {
       position: absolute;
-      top: 38%;
+      top: 41%;
       left: 50%;
       transform: translate(-50%, -50%);
       width: 44px;
@@ -73,7 +108,7 @@
       width: 22px;
       height: 22px;
       border-radius: 50%;
-      border: 3px solid #dfd6c4;
+      border: 2.5px solid #dfd6c4;
       background: rgba(33, 44, 61, 0.6);
       box-shadow: 0 0 15px rgba(223, 214, 196, 0.7);
       position: absolute;
@@ -91,9 +126,9 @@
       position: absolute;
       top: 22px;
       left: 22px;
-      width: 80px;
-      height: 60px;
-      background: radial-gradient(circle at 0% 0%, rgba(223, 214, 196, 0.4) 0%, transparent 70%);
+      width: 90px;
+      height: 65px;
+      background: radial-gradient(circle at 0% 0%, rgba(223, 214, 196, 0.35) 0%, transparent 70%);
       clip-path: polygon(0 0, 100% 40%, 70% 100%);
       transform: rotate(25deg);
       opacity: 0.6;
@@ -104,19 +139,7 @@
       80%, 100% { transform: scale(2.6); opacity: 0; }
     }
 
-    /* Vintage Germany States Topography (Image 2 Inspired) */
-    .germany-topography {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -48%) scale(1);
-      width: min(92vw, 840px);
-      height: auto;
-      transition: transform 0.2s cubic-bezier(0.1, 0, 0.2, 1), opacity 0.3s ease-out;
-      transform-origin: center center;
-    }
-
-    /* Gothic Cathedral Spires Architecture (Image 3 Inspired) */
+    /* Cathedral Spires at bottom */
     .cathedral-silhouette {
       position: absolute;
       bottom: -40px;
@@ -151,86 +174,121 @@
   <!-- ================= SCROLL-REACTIVE CANVAS ================= -->
   <div class="viewport-canvas">
     <div class="space-layer"></div>
+    <div class="cartographic-grid"></div>
 
-    <!-- Night Satellite Constellation (Image 1) -->
-    <div id="satelliteLayer" class="satellite-lights">
-      <!-- Cities Night Glow Array -->
-      <div class="city-beacon" style="top: 36%; left: 51%;" title="Berlin"></div>
-      <div class="city-beacon" style="top: 44%; left: 49%;" title="Munich"></div>
-      <div class="city-beacon" style="top: 32%; left: 47%;" title="Hamburg"></div>
-      <div class="city-beacon" style="top: 40%; left: 46%;" title="Frankfurt"></div>
-      <div class="city-beacon" style="top: 38%; left: 43%;" title="Cologne"></div>
-      <div class="city-beacon" style="top: 37%; left: 38%; opacity: 0.6;" title="Paris"></div>
-      <div class="city-beacon" style="top: 34%; left: 34%; opacity: 0.6;" title="London"></div>
-      <div class="city-beacon" style="top: 42%; left: 54%; opacity: 0.7;" title="Vienna"></div>
+    <!-- Geographically Accurate Germany Map with Exact Cities -->
+    <svg id="germanyMapLayer" class="germany-topography" viewBox="0 0 800 900" fill="none" xmlns="http://www.w3.org/2000/svg">
       
-      <!-- Blue-tint GPS Marker with Radials from Image 1 -->
-      <div class="gps-marker">
-        <div class="gps-ping"></div>
-        <div class="gps-circle"></div>
-        <div class="gps-beam"></div>
-      </div>
-    </div>
+      <!-- Surrounding Water Bodies & Neighboring Countries -->
+      <g>
+        <text x="140" y="140" class="sea-label" transform="rotate(-30 140 140)">North Sea</text>
+        <text x="590" y="80" class="sea-label" transform="rotate(5 590 80)">Baltic Sea</text>
 
-    <!-- Germany Map & State Topography Vector (Image 2) -->
-    <svg id="germanyMapLayer" class="germany-topography" viewBox="0 0 700 850" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Nautical Rhumb Navigation Grid -->
-      <g stroke="#dfd6c4" stroke-width="0.8" stroke-dasharray="3 6" opacity="0.35">
-        <line x1="350" y1="0" x2="350" y2="850" />
-        <line x1="0" y1="425" x2="700" y2="425" />
-        <circle cx="350" cy="425" r="180" />
-        <circle cx="350" cy="425" r="320" />
+        <text x="360" y="45" class="country-label">DENMARK</text>
+        <text x="690" y="270" class="country-label">POLAND</text>
+        <text x="670" y="550" class="country-label">CZECH REPUBLIC</text>
+        <text x="640" y="780" class="country-label">AUSTRIA</text>
+        <text x="280" y="860" class="country-label">SWITZERLAND</text>
+        <text x="110" y="720" class="country-label">FRANCE</text>
+        <text x="90" y="555" class="country-label">LUXEMBOURG</text>
+        <text x="55" y="480" class="country-label">BELGIUM</text>
+        <text x="75" y="325" class="country-label">NETHERLANDS</text>
       </g>
 
-      <!-- Germany Boundary -->
-      <path d="M 330 60 
-               C 380 70, 430 55, 460 90 
-               C 475 115, 510 120, 530 150 
-               C 555 185, 560 220, 580 250 
-               C 610 290, 595 325, 575 355 
-               C 560 385, 575 425, 545 460 
-               C 525 490, 535 530, 520 570 
-               C 510 610, 480 635, 475 670 
-               C 460 715, 410 740, 390 770 
-               C 365 800, 335 780, 305 790 
-               C 270 795, 240 770, 220 735 
-               C 210 700, 190 675, 195 640 
-               C 200 600, 170 575, 165 540 
-               C 160 500, 175 470, 170 430 
-               C 165 395, 145 370, 160 330 
-               C 170 295, 200 275, 215 240 
-               C 225 200, 250 175, 275 145 
-               C 300 115, 310 90, 330 60 Z" 
+      <!-- Accurate Germany Boundary Vector -->
+      <path d="M 335 80
+               C 342 92, 350 120, 350 135
+               C 355 145, 385 140, 400 135
+               C 425 125, 450 140, 470 130
+               C 490 120, 520 140, 535 155
+               C 560 170, 570 195, 590 200
+               C 610 215, 605 240, 620 270
+               C 630 295, 615 320, 610 345
+               C 615 370, 625 390, 645 405
+               C 650 430, 640 450, 610 475
+               C 590 490, 575 510, 560 535
+               C 550 560, 565 590, 570 615
+               C 560 635, 570 670, 545 685
+               C 525 695, 530 720, 510 740
+               C 490 755, 455 745, 435 765
+               C 410 780, 380 770, 360 760
+               C 340 750, 310 765, 290 760
+               C 270 755, 255 735, 245 710
+               C 235 680, 245 650, 235 620
+               C 225 590, 240 560, 225 530
+               C 210 500, 195 470, 205 440
+               C 215 410, 200 380, 210 350
+               C 220 320, 235 300, 250 275
+               C 260 250, 280 230, 275 200
+               C 270 180, 290 160, 305 140
+               C 320 120, 325 95, 335 80 Z" 
             stroke="#dfd6c4" 
             stroke-width="2.2" 
             fill="#dfd6c4" 
             fill-opacity="0.04" />
 
-      <!-- Internal Regional / Bundesland Borders (Image 2 style) -->
-      <path d="M 330 200 Q 420 220 520 180 M 230 330 Q 350 350 490 310 M 200 470 Q 350 490 520 450 M 260 610 Q 380 630 470 590 M 350 200 L 350 630 M 450 310 L 480 500" 
+      <!-- Faint Internal State Dividers -->
+      <path d="M 330 180 Q 420 200 530 170 M 240 310 Q 360 330 520 290 M 215 440 Q 360 460 540 420 M 240 580 Q 370 600 510 560 M 340 180 L 350 580 M 440 290 L 460 480" 
             stroke="#dfd6c4" 
             stroke-width="1.2" 
             stroke-dasharray="3 5" 
-            opacity="0.45" />
+            opacity="0.3" />
 
-      <!-- State & Regional Vintage Labels -->
-      <g fill="#dfd6c4" font-size="11" font-weight="600" letter-spacing="2" opacity="0.55" text-anchor="middle">
-        <text x="470" y="270">BRANDENBURG</text>
-        <text x="340" y="320">NIEDERSACHSEN</text>
-        <text x="490" y="660">BAYERN</text>
-        <text x="270" y="670">BADEN-WÜRTTEMBERG</text>
-        <text x="220" y="440">NORDRHEIN-WESTFALEN</text>
-        <text x="340" y="480">HESSEN</text>
+      <!-- Map Heading Label from Image -->
+      <text x="420" y="420" fill="#dfd6c4" font-size="28" font-weight="900" letter-spacing="14" opacity="0.65" text-anchor="middle">GERMANY</text>
+
+      <!-- Accurate City Coordinates, Nodes, and Labels -->
+      <g>
+        <!-- Berlin (Capital Star ★) -->
+        <polygon points="565,290 568,299 578,299 570,305 573,314 565,309 557,314 560,305 552,299 562,299" fill="#dfd6c4" filter="drop-shadow(0 0 5px rgba(223, 214, 196, 0.9))" />
+        <text x="550" y="306" class="city-label" text-anchor="end">Berlin</text>
+
+        <!-- Hamburg -->
+        <circle cx="370" cy="185" r="3.5" class="city-dot" />
+        <text x="382" y="180" class="city-label">Hamburg</text>
+
+        <!-- Bremen -->
+        <circle cx="305" cy="235" r="3.5" class="city-dot" />
+        <text x="312" y="255" class="city-label">Bremen</text>
+
+        <!-- Cologne -->
+        <circle cx="198" cy="475" r="3.5" class="city-dot" />
+        <text x="204" y="468" class="city-label">Cologne</text>
+
+        <!-- Frankfurt -->
+        <circle cx="295" cy="560" r="3.5" class="city-dot" />
+        <text x="306" y="555" class="city-label">Frankfurt</text>
+
+        <!-- Dresden -->
+        <circle cx="585" cy="460" r="3.5" class="city-dot" />
+        <text x="578" y="480" class="city-label" text-anchor="end">Dresden</text>
+
+        <!-- Nürnberg -->
+        <circle cx="438" cy="625" r="3.5" class="city-dot" />
+        <text x="445" y="645" class="city-label">Nürnberg</text>
+
+        <!-- Stuttgart -->
+        <circle cx="325" cy="685" r="3.5" class="city-dot" />
+        <text x="332" y="705" class="city-label">Stuttgart</text>
+
+        <!-- Munich -->
+        <circle cx="470" cy="745" r="3.5" class="city-dot" />
+        <text x="460" y="765" class="city-label" text-anchor="end">Munich</text>
       </g>
     </svg>
 
-    <!-- Gothic Cathedral Silhouettes (Image 3) at Bottom of Page -->
+    <!-- Pulsing GPS Beacon over Central Germany -->
+    <div class="gps-marker">
+      <div class="gps-ping"></div>
+      <div class="gps-circle"></div>
+      <div class="gps-beam"></div>
+    </div>
+
+    <!-- Gothic Cathedral Spires (Image 3) at Bottom of Page -->
     <svg id="cathedralLayer" class="cathedral-silhouette" viewBox="0 0 1000 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Spires & Tracery -->
       <path d="M 150 400 L 150 180 L 250 20 L 350 180 L 350 400 Z" fill="#dfd6c4" opacity="0.2" />
       <path d="M 650 400 L 650 180 L 750 20 L 850 180 L 850 400 Z" fill="#dfd6c4" opacity="0.2" />
       <path d="M 350 400 L 350 220 L 500 120 L 650 220 L 650 400 Z" fill="#dfd6c4" opacity="0.15" />
-      <!-- Central Nave Arch & Rose Window Outline -->
       <circle cx="500" cy="240" r="45" stroke="#dfd6c4" stroke-width="2" opacity="0.3" />
       <path d="M 450 400 C 450 320 550 320 550 400 Z" stroke="#dfd6c4" stroke-width="2" opacity="0.4" />
       <line x1="250" y1="20" x2="250" y2="0" stroke="#dfd6c4" stroke-width="2" opacity="0.6" />
@@ -283,25 +341,21 @@
             
             <!-- Front Face -->
             <div class="absolute inset-0 backface-hidden p-7 flex flex-col justify-between items-center rounded-[28px] bg-[#212c3d] border border-[#dfd6c4]/25 shadow-inner">
-              <!-- Top Left Pip -->
               <div class="absolute top-5 left-5 flex flex-col items-center font-black text-[#dfd6c4] leading-none">
                 <span class="text-xl">A</span>
                 <span class="text-base text-[#dfd6c4]">♦</span>
               </div>
 
-              <!-- Header Tag -->
               <div class="text-[10px] tracking-[2.5px] uppercase font-bold text-[#748398] pt-1">
                 German
               </div>
 
-              <!-- Center Word & Sentence -->
               <div class="my-auto space-y-3 text-center px-4">
                 <p id="cardFrontHeadword" class="text-2xl font-bold text-[#dfd6c4] tracking-wide leading-tight">Loading...</p>
                 <div class="text-lg text-[#dfd6c4]/80 select-none">♦</div>
                 <p id="cardFrontSentence" class="text-sm text-[#dfd6c4]/90 italic leading-relaxed"></p>
               </div>
 
-              <!-- Bottom Footer & Pip -->
               <div class="text-[10px] tracking-[2px] uppercase text-[#748398] pb-1">
                 Goethe Institut
               </div>
@@ -313,18 +367,15 @@
 
             <!-- Back Face -->
             <div class="absolute inset-0 backface-hidden rotate-y-180 p-7 flex flex-col justify-between items-center rounded-[28px] bg-[#1a2331] border border-[#dfd6c4]/30 shadow-inner">
-              <!-- Top Left Pip -->
               <div class="absolute top-5 left-5 flex flex-col items-center font-black text-[#dfd6c4] leading-none">
                 <span class="text-xl">A</span>
                 <span class="text-base text-[#dfd6c4]">♦</span>
               </div>
 
-              <!-- Header Tag -->
               <div class="text-[10px] tracking-[2.5px] uppercase font-bold text-[#748398] pt-1">
                 Meaning & Context
               </div>
 
-              <!-- Center Content -->
               <div class="my-auto space-y-3 text-center px-4">
                 <p id="cardBackHeadword" class="text-base text-[#748398] font-medium"></p>
                 <p id="cardBackMeaning" class="text-2xl font-bold text-[#dfd6c4] tracking-wide leading-tight"></p>
@@ -333,7 +384,6 @@
                 <p id="cardBackTranslation" class="text-xs text-[#748398] italic leading-relaxed"></p>
               </div>
 
-              <!-- Bottom Footer & Pip -->
               <div class="text-[10px] tracking-[2px] uppercase text-[#748398] pb-1">
                 Goethe Institut
               </div>
@@ -361,7 +411,7 @@
       </div>
     </section>
 
-    <!-- Download Card Section (Deep Translucent Container) -->
+    <!-- Download Card Section -->
     <section class="border border-[#dfd6c4]/15 rounded-2xl bg-[#212c3d]/60 backdrop-blur-md p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-2xl">
       <div class="space-y-1 text-center sm:text-left">
         <h3 class="text-lg font-bold text-[#dfd6c4]">Import directly into your Anki</h3>
@@ -404,8 +454,6 @@
 
   <!-- ================= PARALLAX SCROLL SCRIPT & DATA LOGIC ================= -->
   <script>
-    // --- Scroll Transitions for Parallax Map and Gothic Spires ---
-    const satelliteLayer = document.getElementById('satelliteLayer');
     const germanyMapLayer = document.getElementById('germanyMapLayer');
     const cathedralLayer = document.getElementById('cathedralLayer');
 
@@ -414,25 +462,19 @@
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       const progress = Math.min(1, Math.max(0, scrollY / (docHeight || 1)));
 
-      // 1. Top Section (Satellite / Macro Map fades and zooms gently)
-      const satScale = 1 + progress * 0.4;
-      const satOpacity = Math.max(0, 1 - progress * 1.8);
-      satelliteLayer.style.transform = `scale(${satScale}) translateY(${scrollY * 0.15}px)`;
-      satelliteLayer.style.opacity = satOpacity;
-
-      // 2. Mid Section (Germany regional topography expands into focus)
-      const mapScale = 0.95 + progress * 0.35;
-      const mapOpacity = Math.min(0.35, 0.12 + progress * 0.28);
-      germanyMapLayer.style.transform = `translate(-50%, calc(-48% + ${scrollY * 0.08}px)) scale(${mapScale})`;
+      // Germany vector smoothly expands and elevates with scroll
+      const mapScale = 1 + progress * 0.25;
+      const mapOpacity = Math.max(0.15, 0.45 - progress * 0.25);
+      germanyMapLayer.style.transform = `translate(-50%, calc(-50% + ${scrollY * 0.08}px)) scale(${mapScale})`;
       germanyMapLayer.style.opacity = mapOpacity;
 
-      // 3. Bottom Section (Cologne Gothic Cathedral spires rise from the mist)
-      const cathedralRise = Math.max(0, (progress - 0.3) / 0.7);
-      cathedralLayer.style.transform = `translateX(-50%) translateY(${50 - cathedralRise * 50}px)`;
-      cathedralLayer.style.opacity = 0.05 + cathedralRise * 0.22;
+      // Gothic spires rise into the background at the lower sections
+      const cathedralRise = Math.max(0, (progress - 0.25) / 0.75);
+      cathedralLayer.style.transform = `translateX(-50%) translateY(${60 - cathedralRise * 60}px)`;
+      cathedralLayer.style.opacity = 0.04 + cathedralRise * 0.24;
     }, { passive: true });
 
-    // --- Interactive Flashcard Deck Logic ---
+    // Deck Parsing
     let words = [];
     let currentIndex = 0;
     let isFlipped = false;
