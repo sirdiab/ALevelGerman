@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Goethe German Flashcards Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- PapaParse for client-side CSV parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <style>
+    .perspective { perspective: 1000px; }
+    .transform-style-3d { transform-style: preserve-3d; }
+    .backface-hidden { backface-visibility: hidden; }
+    .rotate-y-180 { transform: rotateY(180deg); }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Navigation / Header -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <span class="text-2xl">🇩🇪</span>
+        <h1 class="text-lg font-bold tracking-tight text-white">Goethe Flashcards Hub</h1>
+      </div>
+      <div class="flex space-x-3">
+        <a id="downloadCsvBtn" href="words.csv" download="goethe_vocab.csv" 
+           class="text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white px-3.5 py-2 rounded-lg transition shadow-sm">
+          Download CSV
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 py-10 space-y-12">
+    <!-- Hero -->
+    <div class="text-center space-y-3">
+      <h2 class="text-4xl font-extrabold tracking-tight text-white">Master Core German Vocabulary</h2>
+      <p class="text-slate-400 text-base max-w-xl mx-auto">
+        Structured directly from the official Goethe-Zertifikat catalogue. Practice online below or export the deck to your favorite spaced-repetition tool.
+      </p>
+    </div>
+
+    <!-- Interactive Flashcard Widget -->
+    <section class="flex flex-col items-center">
+      <div class="w-full max-w-lg">
+        <!-- Controls & Counter -->
+        <div class="flex justify-between items-center text-xs text-slate-400 mb-2 px-1">
+          <span id="cardCounter">Card 0 of 0</span>
+          <span>Tip: Press <kbd class="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700">Space</kbd> to flip, <kbd class="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700">←</kbd> <kbd class="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700">→</kbd> to move</span>
+        </div>
+
+        <!-- Card Container -->
+        <div id="cardContainer" class="perspective w-full h-72 cursor-pointer select-none">
+          <div id="cardInner" class="relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl border border-slate-700/80 bg-slate-800/90 shadow-2xl p-6 flex flex-col justify-between text-center">
+            
+            <!-- Front Face -->
+            <div class="absolute inset-0 backface-hidden p-6 flex flex-col justify-between items-center rounded-2xl bg-slate-800">
+              <span class="text-xs tracking-wider uppercase font-semibold text-indigo-400">German</span>
+              <div class="my-auto space-y-3">
+                <p id="cardFrontHeadword" class="text-2xl font-bold text-white tracking-wide">Loading...</p>
+                <p id="cardFrontSentence" class="text-sm text-slate-300 italic max-w-md leading-relaxed"></p>
+              </div>
+              <span class="text-xs text-slate-500">Click to reveal meaning</span>
+            </div>
+
+            <!-- Back Face -->
+            <div class="absolute inset-0 backface-hidden rotate-y-180 p-6 flex flex-col justify-between items-center rounded-2xl bg-indigo-950/40 border border-indigo-500/30">
+              <span class="text-xs tracking-wider uppercase font-semibold text-emerald-400">English</span>
+              <div class="my-auto space-y-3">
+                <p id="cardBackMeaning" class="text-2xl font-bold text-emerald-300"></p>
+                <p id="cardBackSentence" class="text-sm text-slate-300 italic max-w-md leading-relaxed"></p>
+              </div>
+              <span class="text-xs text-slate-500">Click to flip back</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between items-center mt-4">
+          <button id="prevBtn" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-sm font-medium transition">
+            ← Previous
+          </button>
+          <button id="shuffleBtn" class="px-3 py-2 text-xs bg-slate-800/60 hover:bg-slate-700/80 text-slate-400 rounded-lg transition">
+            🔀 Shuffle
+          </button>
+          <button id="nextBtn" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-sm font-medium transition">
+            Next →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Searchable Directory Table -->
+    <section class="space-y-4 pt-6 border-t border-slate-800">
+      <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+        <h3 class="text-xl font-bold text-white">Browse Vocabulary Directory</h3>
+        <input id="searchInput" type="text" placeholder="Search German or English..." 
+               class="px-3.5 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-72">
+      </div>
+
+      <div class="overflow-x-auto rounded-xl border border-slate-800">
+        <table class="w-full text-left text-sm text-slate-300">
+          <thead class="bg-slate-800/80 text-xs uppercase text-slate-400 border-b border-slate-700">
+            <tr>
+              <th class="py-3 px-4">German Headword</th>
+              <th class="py-3 px-4">English Meaning</th>
+              <th class="py-3 px-4 hidden md:table-cell">Example Sentence</th>
+            </tr>
+          </thead>
+          <tbody id="vocabTableBody" class="divide-y divide-slate-800/60">
+            <tr>
+              <td colspan="3" class="py-8 text-center text-slate-500">Loading dataset...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Interactive Logic -->
+  <script>
+    let words = [];
+    let currentIndex = 0;
+    let isFlipped = false;
+
+    // Elements
+    const cardInner = document.getElementById('cardInner');
+    const cardFrontHeadword = document.getElementById('cardFrontHeadword');
+    const cardFrontSentence = document.getElementById('cardFrontSentence');
+    const cardBackMeaning = document.getElementById('cardBackMeaning');
+    const cardBackSentence = document.getElementById('cardBackSentence');
+    const cardCounter = document.getElementById('cardCounter');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const shuffleBtn = document.getElementById('shuffleBtn');
+    const tableBody = document.getElementById('vocabTableBody');
+    const searchInput = document.getElementById('searchInput');
+
+    // Parse the local CSV file
+    Papa.parse('words.csv', {
+      download: true,
+      header: true,
+      skipEmptyLines: true,
+      complete: function(results) {
+        // Filter out rows missing essential data
+        words = results.data.filter(r => r.German_Headword && r.English_Meaning);
+        if (words.length > 0) {
+          updateCard();
+          renderTable(words);
+        } else {
+          cardFrontHeadword.textContent = "No data found. Place words.csv in the root folder.";
+        }
+      },
+      error: function(err) {
+        cardFrontHeadword.textContent = "Error loading words.csv";
+        console.error(err);
+      }
+    });
+
+    function updateCard() {
+      if (!words.length) return;
+      const cur = words[currentIndex];
+      
+      // Reset flip state smoothly
+      if (isFlipped) {
+        cardInner.classList.remove('rotate-y-180');
+        isFlipped = false;
+      }
+
+      setTimeout(() => {
+        cardFrontHeadword.textContent = cur.German_Headword;
+        cardFrontSentence.innerHTML = cur.Example_Sentence_DE || '';
+        cardBackMeaning.textContent = cur.English_Meaning;
+        cardBackSentence.textContent = cur.Example_Sentence_EN || '';
+        cardCounter.textContent = `Card ${currentIndex + 1} of ${words.length}`;
+      }, isFlipped ? 200 : 0);
+    }
+
+    function toggleFlip() {
+      isFlipped = !isFlipped;
+      cardInner.classList.toggle('rotate-y-180', isFlipped);
+    }
+
+    function nextCard() {
+      if (currentIndex < words.length - 1) {
+        currentIndex++;
+        updateCard();
+      }
+    }
+
+    function prevCard() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateCard();
+      }
+    }
+
+    function shuffleCards() {
+      for (let i = words.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [words[i], words[j]] = [words[j], words[i]];
+      }
+      currentIndex = 0;
+      updateCard();
+    }
+
+    function renderTable(dataList) {
+      const rows = dataList.slice(0, 100).map(item => `
+        <tr class="hover:bg-slate-800/40 transition">
+          <td class="py-3 px-4 font-semibold text-white">${item.German_Headword}</td>
+          <td class="py-3 px-4 text-emerald-400">${item.English_Meaning}</td>
+          <td class="py-3 px-4 text-xs text-slate-400 hidden md:table-cell">${item.Example_Sentence_DE || ''}</td>
+        </tr>
+      `).join('');
+      tableBody.innerHTML = rows || `<tr><td colspan="3" class="py-4 text-center text-slate-500">No matching words found.</td></tr>`;
+    }
+
+    // Event Listeners
+    document.getElementById('cardContainer').addEventListener('click', toggleFlip);
+    nextBtn.addEventListener('click', (e) => { e.stopPropagation(); nextCard(); });
+    prevBtn.addEventListener('click', (e) => { e.stopPropagation(); prevCard(); });
+    shuffleBtn.addEventListener('click', (e) => { e.stopPropagation(); shuffleCards(); });
+
+    document.addEventListener('keydown', (e) => {
+      if (document.activeElement === searchInput) return;
+      if (e.code === 'Space') { e.preventDefault(); toggleFlip(); }
+      if (e.code === 'ArrowRight') nextCard();
+      if (e.code === 'ArrowLeft') prevCard();
+    });
+
+    searchInput.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      const filtered = words.filter(w => 
+        (w.German_Headword && w.German_Headword.toLowerCase().includes(q)) || 
+        (w.English_Meaning && w.English_Meaning.toLowerCase().includes(q))
+      );
+      renderTable(filtered);
+    });
+  </script>
+</body>
+</html>
