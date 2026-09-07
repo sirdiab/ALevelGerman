@@ -3,223 +3,201 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Goethe German Flashcards Hub — The Scholar's Study</title>
+  <title>German A Levels – Core Deck Hub</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Classical academic serif & body -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
-  <!-- PapaParse for client-side CSV parsing -->
+  <!-- PapaParse for parsing words.csv in the interactive tester/directory -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-  
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            serif: ['"Playfair Display"', 'Georgia', 'serif'],
-            display: ['"Cinzel"', 'serif'],
-            body: ['"Newsreader"', 'Georgia', 'serif'],
-          },
-          colors: {
-            wood: {
-              950: '#120b08',
-              900: '#1c120c',
-              850: '#261810',
-              800: '#321f14',
-              700: '#4a2f1e',
-              600: '#67422b',
-            },
-            parchment: {
-              50: '#fdfbf7',
-              100: '#f8f4eb',
-              200: '#eee5d3',
-              300: '#ded0b5',
-              800: '#3b2f25',
-              900: '#2a1f18',
-            },
-            amberLamp: {
-              300: '#fed7aa',
-              400: '#fba94b',
-              500: '#d97706',
-              600: '#b45309',
-            },
-            carpetRed: {
-              600: '#992d2d',
-              700: '#7f1d1d',
-              800: '#5c1414',
-            }
-          }
-        }
-      }
-    }
-  </script>
-
   <style>
-    .perspective { perspective: 1200px; }
+    :root {
+      --bg-dark: #1b2432;
+      --card-bg: #212c3d;
+      --border-rim: rgba(223, 214, 196, 0.18);
+      --parchment-cream: #dfd6c4;
+      --slate-subtext: #748398;
+      --gold-accent: #cbb998;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--parchment-cream);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .perspective { perspective: 1000px; }
     .transform-style-3d { transform-style: preserve-3d; }
     .backface-hidden { backface-visibility: hidden; }
     .rotate-y-180 { transform: rotateY(180deg); }
 
-    /* Subtle study room ambient vignette */
-    body {
-      background: radial-gradient(circle at 50% 18%, #2b1c14 0%, #170e0a 65%, #0d0705 100%);
-      background-attachment: fixed;
-    }
+    /* Custom scrollbars */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #1b2432; }
+    ::-webkit-scrollbar-thumb { background: #2b394e; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3d4f6c; }
 
-    /* Desk lamp ambient spotlight over header & flashcard */
-    .desk-lamp-glow {
-      position: absolute;
-      top: -120px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 750px;
-      height: 480px;
-      background: radial-gradient(ellipse at center, rgba(245, 178, 86, 0.18) 0%, rgba(180, 83, 9, 0.05) 50%, rgba(0, 0, 0, 0) 75%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* Deckled antique card border styling */
-    .study-card {
-      box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(180, 130, 80, 0.25);
+    b, strong {
+      color: var(--gold-accent);
+      font-weight: 700;
     }
   </style>
 </head>
-<body class="text-parchment-200 min-h-screen font-body text-lg antialiased selection:bg-amber-800 selection:text-amber-100 relative">
+<body class="min-h-screen antialiased selection:bg-[#dfd6c4] selection:text-[#1b2432]">
 
-  <!-- Ambient Study Lamp Glow Effect -->
-  <div class="desk-lamp-glow"></div>
-
-  <!-- Navigation / Header -->
-  <header class="border-b border-amber-900/40 bg-wood-950/80 backdrop-blur-md sticky top-0 z-50 shadow-lg">
-    <div class="max-w-5xl mx-auto px-5 py-3.5 flex justify-between items-center relative z-10">
-      <div class="flex items-center space-x-3.5">
-        <span class="text-2xl filter drop-shadow">📜</span>
-        <div>
-          <h1 class="font-display text-sm md:text-base font-bold tracking-widest text-parchment-100 uppercase">
-            Das Goethe-Studierzimmer
-          </h1>
-          <p class="text-[11px] font-sans tracking-wide text-amberLamp-400/70 uppercase">German Vocabulary Archives</p>
-        </div>
+  <!-- Top Navigation -->
+  <header class="border-b border-[#dfd6c4]/10 bg-[#1b2432]/90 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-2.5">
+        <span class="text-xl text-[#dfd6c4]">♦</span>
+        <h1 class="text-sm sm:text-base font-bold tracking-widest uppercase text-[#dfd6c4]">German A Levels</h1>
       </div>
-      <div class="flex items-center space-x-3">
-        <a id="downloadCsvBtn" href="words.csv" download="goethe_vocab.csv" 
-           class="font-sans text-xs tracking-wider uppercase font-semibold bg-carpetRed-700 hover:bg-carpetRed-600 text-parchment-100 px-4 py-2 rounded border border-amber-600/30 transition duration-200 shadow-md flex items-center gap-1.5">
-          <span>⤓</span> Export Lexicon
+      <div>
+        <a id="downloadApkgBtn" href="German A Levels.apkg" download="German A Levels.apkg" 
+           class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider bg-[#dfd6c4] hover:bg-[#ebd5b3] text-[#1b2432] px-4 py-2.5 rounded-full transition shadow-lg shadow-black/30">
+          <span>Download .apkg</span>
+          <span>♦</span>
         </a>
       </div>
     </div>
   </header>
 
-  <main class="max-w-4xl mx-auto px-4 py-12 space-y-12 relative z-10">
-    <!-- Hero Title -->
-    <div class="text-center space-y-2">
-      <span class="text-xs font-sans tracking-widest uppercase text-amber-500 font-semibold">Classical Spaced Repetition</span>
-      <h2 class="text-3xl sm:text-5xl font-serif font-bold text-parchment-50 tracking-tight drop-shadow-sm">
-        Master Core German Vocabulary
-      </h2>
-      <p class="text-amber-100/60 text-base md:text-lg max-w-xl mx-auto font-body italic leading-relaxed">
-        Curated from the Goethe-Zertifikat syllabus. Pull up a chair in the study, test your memory, and refine your comprehension.
+  <main class="max-w-4xl mx-auto px-4 py-12 space-y-14">
+    <!-- Hero Section -->
+    <div class="text-center space-y-3">
+      <div class="inline-block text-[11px] tracking-[3px] uppercase font-bold text-[#748398] mb-1">
+        Official Goethe Catalogue
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#dfd6c4]">German A Levels Deck</h2>
+      <p class="text-[#748398] text-sm sm:text-base max-w-lg mx-auto">
+        A custom playing-card vocabulary system engineered for Anki. Download the full ready-to-study deck or test your memory interactively below.
       </p>
     </div>
 
-    <!-- Interactive Flashcard Widget -->
+    <!-- Playing Card Flashcard Widget -->
     <section class="flex flex-col items-center">
-      <div class="w-full max-w-xl">
-        
-        <!-- Controls & Hint Bar -->
-        <div class="flex justify-between items-center text-xs font-sans text-amber-200/60 mb-2.5 px-2">
-          <span id="cardCounter" class="font-medium tracking-wide uppercase">Card 0 of 0</span>
-          <span class="hidden sm:inline">
-            <kbd class="px-1.5 py-0.5 bg-wood-850 rounded border border-amber-900/60 text-amber-300">Space</kbd> flip &nbsp;•&nbsp; 
-            <kbd class="px-1.5 py-0.5 bg-wood-850 rounded border border-amber-900/60 text-amber-300">←</kbd> 
-            <kbd class="px-1.5 py-0.5 bg-wood-850 rounded border border-amber-900/60 text-amber-300">→</kbd> navigate
-          </span>
+      <div class="w-full max-w-sm">
+        <!-- Control Banner / Counter -->
+        <div class="flex justify-between items-center text-[11px] uppercase tracking-wider text-[#748398] mb-3 px-1">
+          <span id="cardCounter">Loading Cards...</span>
+          <span class="hidden sm:inline">Space to Flip • ← → to Navigate</span>
         </div>
 
-        <!-- Card Container -->
-        <div id="cardContainer" class="perspective w-full h-80 cursor-pointer select-none">
-          <div id="cardInner" class="relative w-full h-full transform-style-3d transition-transform duration-500 rounded-lg study-card">
+        <!-- 3D Card Container -->
+        <div id="cardContainer" class="perspective w-full h-[490px] cursor-pointer select-none">
+          <div id="cardInner" class="relative w-full h-full transform-style-3d transition-transform duration-500 rounded-[28px]">
             
-            <!-- Front Face: Warm Aged Parchment Card -->
-            <div class="absolute inset-0 backface-hidden p-8 flex flex-col justify-between items-center rounded-lg bg-[#fbf8f0] text-wood-950 border-2 border-amber-800/30">
-              <div class="w-full flex justify-between items-center border-b border-amber-950/10 pb-2">
-                <span class="text-[11px] font-sans tracking-widest uppercase font-bold text-amber-800">Deutsch • Karteikarte</span>
-                <span class="text-xs text-wood-600">✦</span>
-              </div>
-              
-              <div class="my-auto text-center space-y-3 px-4">
-                <p id="cardFrontHeadword" class="text-3xl md:text-4xl font-serif font-bold text-wood-900 tracking-normal">
-                  Laden...
-                </p>
-                <p id="cardFrontSentence" class="text-base sm:text-lg text-wood-700 italic font-body leading-relaxed"></p>
+            <!-- Front Face -->
+            <div class="absolute inset-0 backface-hidden p-7 flex flex-col justify-between items-center rounded-[28px] bg-[#212c3d] border border-[#dfd6c4]/20 shadow-[0_20px_50px_rgba(0,0,0,0.6)]">
+              <!-- Top Left Pip -->
+              <div class="absolute top-5 left-5 flex flex-col items-center font-black text-[#dfd6c4] leading-none">
+                <span class="text-xl">A</span>
+                <span class="text-base text-[#dfd6c4]">♦</span>
               </div>
 
-              <span class="text-xs font-sans tracking-wider uppercase text-wood-600/70 border-t border-amber-950/10 pt-2 w-full text-center">
-                Click or press Space to reveal meaning
-              </span>
+              <!-- Header Tag -->
+              <div class="text-[10px] tracking-[2.5px] uppercase font-bold text-[#748398] pt-1">
+                German
+              </div>
+
+              <!-- Center Word & Sentence -->
+              <div class="my-auto space-y-3 text-center px-4">
+                <p id="cardFrontHeadword" class="text-2xl font-bold text-[#dfd6c4] tracking-wide leading-tight">Loading...</p>
+                <div class="text-lg text-[#dfd6c4]/80 select-none">♦</div>
+                <p id="cardFrontSentence" class="text-sm text-[#dfd6c4]/90 italic leading-relaxed"></p>
+              </div>
+
+              <!-- Bottom Footer & Pip -->
+              <div class="text-[10px] tracking-[2px] uppercase text-[#748398] pb-1">
+                Goethe Institut
+              </div>
+              <div class="absolute bottom-5 right-5 flex flex-col items-center font-black text-[#dfd6c4] leading-none rotate-180">
+                <span class="text-xl">A</span>
+                <span class="text-base text-[#dfd6c4]">♦</span>
+              </div>
             </div>
 
-            <!-- Back Face: Rich Dark Walnut & Warm Amber Glow -->
-            <div class="absolute inset-0 backface-hidden rotate-y-180 p-8 flex flex-col justify-between items-center rounded-lg bg-wood-900 text-parchment-100 border-2 border-amber-600/40">
-              <div class="w-full flex justify-between items-center border-b border-amber-900/50 pb-2">
-                <span class="text-[11px] font-sans tracking-widest uppercase font-bold text-amber-400">English • Translation</span>
-                <span class="text-xs text-amber-500">✦</span>
+            <!-- Back Face -->
+            <div class="absolute inset-0 backface-hidden rotate-y-180 p-7 flex flex-col justify-between items-center rounded-[28px] bg-[#1d2736] border border-[#dfd6c4]/30 shadow-[0_20px_50px_rgba(0,0,0,0.6)]">
+              <!-- Top Left Pip -->
+              <div class="absolute top-5 left-5 flex flex-col items-center font-black text-[#dfd6c4] leading-none">
+                <span class="text-xl">A</span>
+                <span class="text-base text-[#dfd6c4]">♦</span>
               </div>
 
-              <div class="my-auto text-center space-y-3 px-4">
-                <p id="cardBackMeaning" class="text-3xl md:text-4xl font-serif font-bold text-amberLamp-300"></p>
-                <p id="cardBackSentence" class="text-base sm:text-lg text-parchment-300 italic font-body leading-relaxed"></p>
+              <!-- Header Tag -->
+              <div class="text-[10px] tracking-[2.5px] uppercase font-bold text-[#748398] pt-1">
+                Meaning & Context
               </div>
 
-              <span class="text-xs font-sans tracking-wider uppercase text-amber-200/50 border-t border-amber-900/50 pt-2 w-full text-center">
-                Click to flip back
-              </span>
+              <!-- Center Content -->
+              <div class="my-auto space-y-3 text-center px-4">
+                <p id="cardBackHeadword" class="text-base text-[#748398] font-medium"></p>
+                <p id="cardBackMeaning" class="text-2xl font-bold text-[#dfd6c4] tracking-wide leading-tight"></p>
+                <div class="w-20 h-[1px] bg-[#dfd6c4]/30 mx-auto my-2"></div>
+                <p id="cardBackSentence" class="text-xs text-[#dfd6c4]/80 italic leading-relaxed"></p>
+                <p id="cardBackTranslation" class="text-xs text-[#748398] italic leading-relaxed"></p>
+              </div>
+
+              <!-- Bottom Footer & Pip -->
+              <div class="text-[10px] tracking-[2px] uppercase text-[#748398] pb-1">
+                Goethe Institut
+              </div>
+              <div class="absolute bottom-5 right-5 flex flex-col items-center font-black text-[#dfd6c4] leading-none rotate-180">
+                <span class="text-xl">A</span>
+                <span class="text-base text-[#dfd6c4]">♦</span>
+              </div>
             </div>
 
           </div>
         </div>
 
         <!-- Navigation Buttons -->
-        <div class="flex justify-between items-center mt-5 font-sans">
-          <button id="prevBtn" class="px-5 py-2.5 bg-wood-850 hover:bg-wood-800 border border-amber-900/60 text-parchment-200 rounded text-xs font-semibold tracking-wider uppercase transition shadow">
-            ← Vorige
+        <div class="flex justify-between items-center mt-5">
+          <button id="prevBtn" class="px-4 py-2 bg-[#212c3d] hover:bg-[#283549] text-[#dfd6c4] border border-[#dfd6c4]/15 rounded-xl text-xs font-semibold tracking-wider transition">
+            ← PREV
           </button>
-          <button id="shuffleBtn" class="px-4 py-2 bg-wood-900 hover:bg-wood-850 text-amber-400/90 border border-amber-900/40 rounded text-xs tracking-wider uppercase transition shadow-inner">
-            🔀 Mischen
+          <button id="shuffleBtn" class="px-3.5 py-2 bg-[#212c3d]/60 hover:bg-[#283549] text-[#748398] border border-[#dfd6c4]/10 rounded-xl text-xs tracking-wider transition">
+            SHUFFLE
           </button>
-          <button id="nextBtn" class="px-5 py-2.5 bg-wood-850 hover:bg-wood-800 border border-amber-900/60 text-parchment-200 rounded text-xs font-semibold tracking-wider uppercase transition shadow">
-            Nächste →
+          <button id="nextBtn" class="px-4 py-2 bg-[#212c3d] hover:bg-[#283549] text-[#dfd6c4] border border-[#dfd6c4]/15 rounded-xl text-xs font-semibold tracking-wider transition">
+            NEXT →
           </button>
         </div>
-
       </div>
     </section>
 
-    <!-- Searchable Directory Table (Book catalogue aesthetic) -->
-    <section class="space-y-5 pt-8 border-t border-amber-900/40">
-      <div class="flex flex-col sm:flex-row justify-between sm:items-baseline gap-4">
-        <div>
-          <h3 class="text-2xl font-serif font-bold text-parchment-100">Bibliotheks-Verzeichnis</h3>
-          <p class="text-sm font-sans text-amber-200/60">Browse or filter the complete vocabulary ledger</p>
-        </div>
-        <input id="searchInput" type="text" placeholder="Search Deutsch or English..." 
-               class="px-4 py-2.5 bg-wood-900/90 border border-amber-900/70 rounded text-sm text-parchment-100 placeholder-amber-200/30 focus:outline-none focus:ring-1 focus:ring-amber-500 font-sans w-full sm:w-80 shadow-inner">
+    <!-- Download Card Section -->
+    <section class="border border-[#dfd6c4]/15 rounded-2xl bg-[#212c3d]/70 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
+      <div class="space-y-1 text-center sm:text-left">
+        <h3 class="text-lg font-bold text-[#dfd6c4]">Import directly into your Anki</h3>
+        <p class="text-xs text-[#748398] max-w-md">
+          Pre-styled with this playing-card dark slate theme, audio-ready fields, and smart review tagging.
+        </p>
+      </div>
+      <a href="German A Levels.apkg" download="German A Levels.apkg" 
+         class="w-full sm:w-auto text-center font-bold text-xs uppercase tracking-widest bg-[#dfd6c4] hover:bg-[#ebd5b3] text-[#1b2432] px-6 py-3.5 rounded-xl transition shadow-md">
+        Download German A Levels (.apkg)
+      </a>
+    </section>
+
+    <!-- Searchable Directory Table -->
+    <section class="space-y-4 pt-6 border-t border-[#dfd6c4]/10">
+      <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+        <h3 class="text-lg font-bold text-[#dfd6c4] tracking-wide">Browse Vocabulary</h3>
+        <input id="searchInput" type="text" placeholder="Search words or translations..." 
+               class="px-4 py-2.5 bg-[#212c3d] border border-[#dfd6c4]/15 rounded-xl text-xs text-[#dfd6c4] placeholder-[#748398] focus:outline-none focus:border-[#dfd6c4]/50 w-full sm:w-72 transition">
       </div>
 
-      <div class="overflow-x-auto rounded-lg border border-amber-900/50 bg-wood-900/40 backdrop-blur shadow-2xl">
-        <table class="w-full text-left text-sm font-body border-collapse">
-          <thead class="bg-wood-950/90 font-sans text-xs uppercase tracking-wider text-amber-400/80 border-b border-amber-900/60">
+      <div class="overflow-x-auto rounded-2xl border border-[#dfd6c4]/15 bg-[#212c3d]/40 shadow-xl">
+        <table class="w-full text-left text-xs text-[#dfd6c4]">
+          <thead class="bg-[#212c3d] text-[10px] uppercase tracking-widest text-[#748398] border-b border-[#dfd6c4]/10">
             <tr>
-              <th class="py-3.5 px-5 font-semibold">German Headword</th>
-              <th class="py-3.5 px-5 font-semibold">English Meaning</th>
-              <th class="py-3.5 px-5 hidden md:table-cell font-semibold">Example Sentence</th>
+              <th class="py-3.5 px-4">Headword</th>
+              <th class="py-3.5 px-4">English Meaning</th>
+              <th class="py-3.5 px-4 hidden md:table-cell">Example Sentence</th>
             </tr>
           </thead>
-          <tbody id="vocabTableBody" class="divide-y divide-amber-950/40 text-parchment-200">
+          <tbody id="vocabTableBody" class="divide-y divide-[#dfd6c4]/5">
             <tr>
-              <td colspan="3" class="py-10 text-center font-serif italic text-amber-200/40">Loading archives...</td>
+              <td colspan="3" class="py-8 text-center text-[#748398]">Loading dataset...</td>
             </tr>
           </tbody>
         </table>
@@ -227,7 +205,7 @@
     </section>
   </main>
 
-  <!-- Interactive Logic -->
+  <!-- Interactive JavaScript Logic -->
   <script>
     let words = [];
     let currentIndex = 0;
@@ -236,8 +214,10 @@
     const cardInner = document.getElementById('cardInner');
     const cardFrontHeadword = document.getElementById('cardFrontHeadword');
     const cardFrontSentence = document.getElementById('cardFrontSentence');
+    const cardBackHeadword = document.getElementById('cardBackHeadword');
     const cardBackMeaning = document.getElementById('cardBackMeaning');
     const cardBackSentence = document.getElementById('cardBackSentence');
+    const cardBackTranslation = document.getElementById('cardBackTranslation');
     const cardCounter = document.getElementById('cardCounter');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
@@ -255,11 +235,11 @@
           updateCard();
           renderTable(words);
         } else {
-          cardFrontHeadword.textContent = "Keine Daten gefunden.";
+          cardFrontHeadword.textContent = "Please place words.csv in the same folder";
         }
       },
       error: function(err) {
-        cardFrontHeadword.textContent = "Fehler beim Laden von words.csv";
+        cardFrontHeadword.textContent = "Error reading words.csv";
         console.error(err);
       }
     });
@@ -275,9 +255,13 @@
 
       setTimeout(() => {
         cardFrontHeadword.textContent = cur.German_Headword;
-        cardFrontSentence.innerHTML = cur.Example_Sentence_DE ? `„${cur.Example_Sentence_DE}“` : '';
+        cardFrontSentence.innerHTML = cur.Example_Sentence_DE || '';
+        
+        cardBackHeadword.textContent = cur.German_Headword;
         cardBackMeaning.textContent = cur.English_Meaning;
-        cardBackSentence.textContent = cur.Example_Sentence_EN ? `"${cur.Example_Sentence_EN}"` : '';
+        cardBackSentence.innerHTML = cur.Example_Sentence_DE || '';
+        cardBackTranslation.textContent = cur.Example_Sentence_EN || '';
+        
         cardCounter.textContent = `Card ${currentIndex + 1} of ${words.length}`;
       }, isFlipped ? 200 : 0);
     }
@@ -312,13 +296,13 @@
 
     function renderTable(dataList) {
       const rows = dataList.slice(0, 100).map(item => `
-        <tr class="hover:bg-wood-800/40 transition-colors">
-          <td class="py-3.5 px-5 font-serif font-bold text-parchment-100">${item.German_Headword}</td>
-          <td class="py-3.5 px-5 text-amber-300">${item.English_Meaning}</td>
-          <td class="py-3.5 px-5 text-sm italic text-amber-100/60 hidden md:table-cell">${item.Example_Sentence_DE || ''}</td>
+        <tr class="hover:bg-[#212c3d]/60 transition">
+          <td class="py-3 px-4 font-semibold text-[#dfd6c4]">${item.German_Headword}</td>
+          <td class="py-3 px-4 text-[#cbb998] font-medium">${item.English_Meaning}</td>
+          <td class="py-3 px-4 text-[#748398] hidden md:table-cell">${item.Example_Sentence_DE || ''}</td>
         </tr>
       `).join('');
-      tableBody.innerHTML = rows || `<tr><td colspan="3" class="py-6 text-center font-serif italic text-amber-200/40">Keine passenden Einträge gefunden.</td></tr>`;
+      tableBody.innerHTML = rows || `<tr><td colspan="3" class="py-6 text-center text-[#748398]">No matching cards found.</td></tr>`;
     }
 
     document.getElementById('cardContainer').addEventListener('click', toggleFlip);
@@ -344,5 +328,3 @@
   </script>
 </body>
 </html>
-
-```
